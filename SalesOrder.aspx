@@ -46,7 +46,7 @@
                 </tr>
                 <tr>
                     <td class="auto-style3" style="vertical-align: top">
-                        <asp:DropDownList ID="ddlStaff" runat="server" DataSourceID="sdsStaff" DataTextField="Name" DataValueField="EmployeeID" Height="24px">
+                        <asp:DropDownList ID="ddlStaff" runat="server" DataSourceID="sdsStaff" DataTextField="Name" DataValueField="EmployeeID" Height="24px" AutoPostBack="True">
                         </asp:DropDownList>
                     </td>
                     <td class="auto-style4" style="vertical-align: top;">
@@ -106,7 +106,7 @@
                                 <asp:Label ID="DiscountLabel" runat="server" Text='<%# Eval("Discount") %>' />%
                                 <br />
                                 Sales:
-                                $<asp:Label ID="SalesLabel" runat="server" Text='<%# Eval("TotalPrice","{0:0.00}") %>' />
+                                $<asp:Label ID="SalesLabel" runat="server" Text='<%# Eval("Sales","{0:0.00}") %>' />
                                 <br />
                                 <br />
 
@@ -120,12 +120,8 @@
             </table>
         </div>
         <p>
-            <asp:SqlDataSource ID="sdsStaff" runat="server" ConnectionString="<%$ ConnectionStrings:ConnectionString %>" SelectCommand="SELECT CONCAT (LastName, CONCAT(' ',FirstName)) AS Name, EmployeeID
-FROM Employees
-"></asp:SqlDataSource>
-        </p>
-        <p>
-            <asp:SqlDataSource ID="sdsYear" runat="server" ConnectionString="<%$ ConnectionStrings:ConnectionString %>" SelectCommand="SELECT DISTINCT YEAR(OrderDate) AS Year FROM Orders WHERE Orders.EmployeeID=@EmployeeID">
+            <asp:SqlDataSource ID="sdsStaff" runat="server" ConnectionString="<%$ ConnectionStrings:ConnectionString %>" SelectCommand="SELECT CONCAT(LastName, ' ', FirstName) AS Name, EmployeeID FROM Employees"></asp:SqlDataSource>
+            <asp:SqlDataSource ID="sdsYear" runat="server" ConnectionString="<%$ ConnectionStrings:ConnectionString %>" SelectCommand="SELECT DISTINCT YEAR(OrderDate) AS Year FROM Orders WHERE Orders.EmployeeID=@EmployeeID ORDER BY Year DESC">
                 <SelectParameters>
                     <asp:ControlParameter ControlID="ddlStaff" Name="EmployeeID" PropertyName="SelectedValue" />
                 </SelectParameters>
@@ -137,7 +133,7 @@ FROM Employees
                 </SelectParameters>
             </asp:SqlDataSource>
             <asp:SqlDataSource ID="sdsOrderDetails" runat="server" ConnectionString="<%$ ConnectionStrings:ConnectionString %>" SelectCommand="SELECT [Order Details].OrderID, [Order Details].ProductID, [Order Details].UnitPrice, [Order Details].Quantity, ([Order Details].Discount*100) As Discount, Products.ProductName, 
-Round(([Order Details].UnitPrice*(1-[Order Details].Discount) * [Order Details].Quantity ),2) AS TotalPrice
+Round(([Order Details].UnitPrice*(1-[Order Details].Discount) * [Order Details].Quantity ),2) AS Sales
 FROM [Order Details] INNER JOIN Products ON [Order Details].ProductID = Products.ProductID WHERE ([Order Details].OrderID = @OrderID)">
                 <SelectParameters>
                     <asp:ControlParameter ControlID="gvOrder" Name="OrderID" PropertyName="SelectedValue" />

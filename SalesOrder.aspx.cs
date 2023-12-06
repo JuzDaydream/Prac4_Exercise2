@@ -11,7 +11,11 @@ namespace Prac4_Exercise2
     {
         protected void Page_Load(object sender, EventArgs e)
         {
+            if (IsPostBack == true)
+            {
+                lblTitleGridView.Text = string.Empty;
 
+            }
         }
 
         protected void btnSearch_Click(object sender, EventArgs e)
@@ -19,6 +23,11 @@ namespace Prac4_Exercise2
             lblTitleGridView.Text = "Sales Order by " + ddlStaff.SelectedItem.Text
                 + "in the year of " + rblYear.SelectedItem.Text+ ". Grand Total Sales: "
                 ;
+        }
+
+        protected void gvOrder_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            lblOldSales.Text= string.Empty;
         }
     }
 }
